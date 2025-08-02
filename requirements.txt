@@ -36,6 +36,7 @@ python-dotenv==1.0.0
 pydantic==2.5.2
 pydantic-settings==2.1.0
 redis==5.0.1
+aiofiles==23.2.1
 
 # ML
 torch==2.1.2
