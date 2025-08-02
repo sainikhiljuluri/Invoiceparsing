@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Processing System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .upload-area {
+            transition: all 0.3s ease;
+        }
+        .upload-area:hover {
+            border-color: #3b82f6;
+            background-color: #f8fafc;
+        }
+        .upload-area.dragover {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center">
+                <i class="fas fa-file-invoice-dollar text-3xl text-blue-600 mr-4"></i>
+                <h1 class="text-3xl font-bold text-gray-800">Apni Mandi Invoice Processing System</h1>
+            </div>
+            <div class="flex space-x-4">
+                <a href="chat/index.html" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center">
+                    <i class="fas fa-comments mr-2"></i>
+                    Analytics Chat
+                </a>
+            </div>
+        </div>
+        
+        <!-- Navigation Cards -->
+        <div class="grid md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-upload text-2xl text-blue-600 mr-3"></i>
+                    <h2 class="text-xl font-semibold text-gray-800">Upload & Process Invoices</h2>
+                </div>
+                <p class="text-gray-600 mb-6">Choose how you'd like to upload your invoice:</p>
+                
+                <!-- Multi-option Upload Interface -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <!-- Camera Capture -->
+                    <div class="upload-option border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 hover:bg-blue-50 transition-all duration-200 cursor-pointer" id="cameraOption">
+                        <i class="fas fa-camera text-3xl text-blue-600 mb-3"></i>
+                        <h3 class="font-semibold text-gray-800 mb-2">Take Photo</h3>
+                        <p class="text-sm text-gray-600">Capture invoice with camera</p>
+                    </div>
+                    
+                    <!-- Gallery Selection -->
+                    <div class="upload-option border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-green-500 hover:bg-green-50 transition-all duration-200 cursor-pointer" id="galleryOption">
+                        <i class="fas fa-images text-3xl text-green-600 mb-3"></i>
+                        <h3 class="font-semibold text-gray-800 mb-2">From Gallery</h3>
+                        <p class="text-sm text-gray-600">Select from photo library</p>
+                    </div>
+                    
+                    <!-- PDF Upload -->
+                    <div class="upload-option border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-500 hover:bg-purple-50 transition-all duration-200 cursor-pointer" id="pdfOption">
+                        <i class="fas fa-file-pdf text-3xl text-purple-600 mb-3"></i>
+                        <h3 class="font-semibold text-gray-800 mb-2">Upload PDF</h3>
+                        <p class="text-sm text-gray-600">Select PDF document</p>
+                    </div>
+                </div>
+                
+                <!-- Hidden File Inputs -->
+                <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;">
+                <input type="file" id="galleryInput" accept="image/*" style="display: none;">
+                <input type="file" id="pdfInput" accept=".pdf" style="display: none;">
+                
+                <!-- Preview Area -->
+                <div id="previewArea" class="hidden mb-6">
+                    <div class="border-2 border-gray-200 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="font-semibold text-gray-800">Selected File:</h4>
+                            <button id="clearSelection" class="text-red-600 hover:text-red-800 text-sm">
+                                <i class="fas fa-times mr-1"></i>Clear
+                            </button>
+                        </div>
+                        <div id="filePreview" class="text-center">
+                            <!-- Preview content will be inserted here -->
+                        </div>
+                        <div id="fileInfo" class="mt-3 text-sm text-gray-600">
+                            <!-- File information will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-chart-line text-2xl text-green-600 mr-3"></i>
+                    <h2 class="text-xl font-semibold text-gray-800">Analytics & Insights</h2>
+                </div>
+                <p class="text-gray-600 mb-4">Chat with AI to get cost prices, trends, product details, and business insights.</p>
+                <div class="text-sm text-gray-500">
+                    <i class="fas fa-check text-green-500 mr-1"></i> Real-time cost queries<br>
+                    <i class="fas fa-check text-green-500 mr-1"></i> Product details & barcodes<br>
+                    <i class="fas fa-check text-green-500 mr-1"></i> Invoice traceability
+                </div>
+                <a href="/chat/" class="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm">
+                    Open Analytics Chat →
+                </a>
+            </div>
+        </div>
+            <div class="text-sm text-gray-500">
+                <i class="fas fa-robot mr-1"></i>
+                Powered by Claude AI
+            </div>
+        </div>
+        
+        <!-- Upload Status and Submit Section -->
+        <div class="bg-white rounded-lg shadow-lg p-8 max-w-2xl mx-auto">
+            <div id="uploadStatus" class="mb-6"></div>
+            
+            <div class="text-center">
+                <button id="submitBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-200 disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>
+                    <i class="fas fa-paper-plane mr-2"></i>
+                    Process Invoice
+                </button>
+            </div>
+            
+            <div class="mt-6 text-center text-sm text-gray-500">
+                <p><i class="fas fa-info-circle mr-1"></i> Your invoice will be processed automatically with AI-powered pricing</p>
+                <p class="mt-1">Processing typically takes 1-2 minutes</p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="upload.js"></script>
+</body>
+</html>

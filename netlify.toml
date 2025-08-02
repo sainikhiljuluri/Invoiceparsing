@@ -1,0 +1,44 @@
+[build]
+  publish = "frontend"
+  command = "echo 'AI-Powered Invoice Processing System - Ready for deployment'"
+
+[build.environment]
+  NODE_VERSION = "18"
+  PYTHON_VERSION = "3.9"
+
+# API redirects for backend functionality
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# Chat interface routing
+[[redirects]]
+  from = "/chat/*"
+  to = "/chat/index.html"
+  status = 200
+
+# Main upload interface (fallback)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[functions]
+  directory = "api"
+  node_bundler = "esbuild"
+
+[dev]
+  command = "python3 -m uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload"
+  port = 8000
+  publish = "frontend"
+  autoLaunch = false
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

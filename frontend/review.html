@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Human Review Dashboard - Invoice Processing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center">
+                    <i class="fas fa-clipboard-check text-blue-600 text-2xl mr-3"></i>
+                    <h1 class="text-2xl font-bold text-gray-900">Human Review Dashboard</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div id="statsDisplay" class="text-sm text-gray-600">
+                        Loading stats...
+                    </div>
+                    <a href="index.html" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-upload mr-2"></i>Upload Invoice
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-12 gap-6">
+            <!-- Queue List - Left Side -->
+            <div class="col-span-4">
+                <div class="bg-white rounded-lg shadow-sm border">
+                    <div class="p-6 border-b">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-lg font-semibold text-gray-900">Review Queue</h2>
+                            <button id="refreshBtn" class="text-blue-600 hover:text-blue-800">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        <div class="mt-2 flex space-x-2">
+                            <select id="priorityFilter" class="text-sm border rounded px-2 py-1">
+                                <option value="">All Priorities</option>
+                                <option value="1">High Priority</option>
+                                <option value="2">Medium Priority</option>
+                            </select>
+                            <button id="filterBtn" class="bg-gray-100 text-gray-700 px-3 py-1 rounded text-sm hover:bg-gray-200">
+                                Filter
+                            </button>
+                        </div>
+                    </div>
+                    <div id="queueList" class="divide-y divide-gray-200 max-h-96 overflow-y-auto">
+                        <!-- Queue items will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review Interface - Right Side -->
+            <div class="col-span-8">
+                <div id="reviewInterface" class="bg-white rounded-lg shadow-sm border p-6">
+                    <div class="text-center text-gray-500 py-12">
+                        <i class="fas fa-hand-pointer text-4xl mb-4"></i>
+                        <p class="text-lg">Select an item from the queue to start reviewing</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 max-w-sm mx-4">
+            <div class="flex items-center">
+                <i class="fas fa-spinner fa-spin text-blue-600 mr-3"></i>
+                <span>Processing...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 max-w-md mx-4">
+            <div class="flex items-center mb-4">
+                <i class="fas fa-check-circle text-green-600 text-2xl mr-3"></i>
+                <h3 class="text-lg font-semibold">Success!</h3>
+            </div>
+            <p id="successMessage" class="text-gray-700 mb-4"></p>
+            <button id="successOkBtn" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                OK
+            </button>
+        </div>
+    </div>
+
+    <script src="review.js"></script>
+</body>
+</html>

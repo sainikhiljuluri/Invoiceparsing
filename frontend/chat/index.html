@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Analytics Chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b px-6 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <i class="fas fa-robot text-blue-600 text-2xl"></i>
+                <h1 class="text-xl font-semibold text-gray-800">Invoice Analytics Chat</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div id="connection-status" class="flex items-center space-x-2">
+                    <div class="w-2 h-2 bg-red-500 rounded-full" id="status-indicator"></div>
+                    <span class="text-sm text-gray-600" id="status-text">Connecting...</span>
+                </div>
+                <button id="clear-chat" class="text-gray-500 hover:text-red-600 transition-colors">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex overflow-hidden">
+        <!-- Chat Area -->
+        <div class="flex-1 flex flex-col">
+            <!-- Messages Container -->
+            <div id="messages-container" class="flex-1 overflow-y-auto p-6 space-y-4">
+                <!-- Welcome Message -->
+                <div class="flex items-start space-x-3">
+                    <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-robot text-white text-sm"></i>
+                    </div>
+                    <div class="bg-white rounded-lg p-4 shadow-sm max-w-md">
+                        <p class="text-gray-800">Hello! I'm your invoice analytics assistant. Ask me about costs, trends, anomalies, or vendor performance.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="px-6 py-3 bg-white border-t">
+                <div class="flex flex-wrap gap-2 mb-3">
+                    <button class="quick-action bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm hover:bg-blue-100 transition-colors" 
+                            data-query="What's the cost of paper towels?">
+                        💰 Product Costs
+                    </button>
+                    <button class="quick-action bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm hover:bg-green-100 transition-colors" 
+                            data-query="Show me price trends">
+                        📈 Price Trends
+                    </button>
+                    <button class="quick-action bg-red-50 text-red-700 px-3 py-1 rounded-full text-sm hover:bg-red-100 transition-colors" 
+                            data-query="Any pricing anomalies?">
+                        🚨 Anomalies
+                    </button>
+                    <button class="quick-action bg-purple-50 text-purple-700 px-3 py-1 rounded-full text-sm hover:bg-purple-100 transition-colors" 
+                            data-query="Compare vendor performance">
+                        🏪 Vendors
+                    </button>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="px-6 py-4 bg-white border-t">
+                <div class="flex items-end space-x-3">
+                    <div class="flex-1">
+                        <textarea id="message-input" 
+                                placeholder="Ask about costs, trends, anomalies..." 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                rows="1"></textarea>
+                    </div>
+                    <button id="send-button" 
+                            class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                
+                <!-- Typing Indicator -->
+                <div id="typing-indicator" class="hidden mt-2 text-sm text-gray-500">
+                    <i class="fas fa-circle-notch fa-spin"></i> Assistant is typing...
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="w-80 bg-white border-l flex flex-col">
+            <!-- Analytics Summary -->
+            <div class="p-6 border-b">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Analytics Summary</h3>
+                <div id="analytics-summary" class="space-y-3">
+                    <div class="bg-gray-50 p-3 rounded-lg">
+                        <div class="text-sm text-gray-600">Loading analytics...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Example Queries -->
+            <div class="p-6 flex-1">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Example Queries</h3>
+                <div class="space-y-2">
+                    <button class="example-query w-full text-left p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-sm"
+                            data-query="What's the cost of paper towels?">
+                        What's the cost of paper towels?
+                    </button>
+                    <button class="example-query w-full text-left p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-sm"
+                            data-query="Show me price trends for cleaning supplies">
+                        Show me price trends for cleaning supplies
+                    </button>
+                    <button class="example-query w-full text-left p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-sm"
+                            data-query="Are there any pricing anomalies this week?">
+                        Are there any pricing anomalies this week?
+                    </button>
+                    <button class="example-query w-full text-left p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-sm"
+                            data-query="Compare vendor performance this month">
+                        Compare vendor performance this month
+                    </button>
+                    <button class="example-query w-full text-left p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-sm"
+                            data-query="What products had the biggest price changes?">
+                        What products had the biggest price changes?
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="chat.js"></script>
+</body>
+</html>
